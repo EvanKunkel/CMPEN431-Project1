@@ -70,10 +70,22 @@ int validateConfiguration(std::string configuration) {
 	// FIXME - YOUR CODE HERE
 	// First four points in section 8.3
 	int il1block_size = extractConfigPararm(configuration, 2);
-	int ifq = extractConfigPararm(configuration, 0);
-	if(block_size != ifq)
+	int il1size = getdl1size(halfBackedConfig);
+	int dl1size = getil1size(halfBackedConfig);
+	int ul2block_size = extractConfigPararm(configuration, 8);
+	int ul2size = getl2size(halfBackedConfig);
+	int ifq = extractConfigPararm(configuration, 0) * 8;
+
+	if(il1block_size < ifq)
 		return 0;
-	else if()
+	else if(ul2block_size < 2 * il1block_size)
+		return 0;
+	else if(il1size < 2048 || il1size > 65536)
+		return 0;
+	else if(dl1size < 2048 || dl1size > 65536)
+		return 0;
+	else if(ul2size < 32768 || ul2size > 1048576)
+		return 0;
 	// The below is a necessary, but insufficient condition for validating a
 	// configuration.
 	return isNumDimConfiguration(configuration);
