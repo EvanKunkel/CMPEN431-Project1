@@ -46,15 +46,20 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
 	//
 	//YOUR CODE BEGINS HERE
 	//
+	//8.3.5 & 8.3.6
+	std::stringstream latency;
 
-	// This is a dumb implementation.
-	latencySettings = "1 1 1";
+	int dl1size = getdl1size(halfBackedConfig);
+	int il1size = getil1size(halfBackedConfig);
+	int ul2size = getl2size(halfBackedConfig);
+
+	latency << log2(dl1size) - 10 + log2(extractConfigPararm(halfBackedConfig, 4)) << " " << log2(il1size) - 10 + log2(extractConfigPararm(halfBackedConfig, 6)) << " " << log2(ul2size) - 10 + log2(extractConfigPararm(halfBackedConfig, 9));
 
 	//
 	//YOUR CODE ENDS HERE
 	//
 
-	return latencySettings;
+	return latency;
 }
 
 /*
@@ -63,7 +68,12 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
 int validateConfiguration(std::string configuration) {
 
 	// FIXME - YOUR CODE HERE
-
+	// First four points in section 8.3
+	int il1block_size = extractConfigPararm(configuration, 2);
+	int ifq = extractConfigPararm(configuration, 0);
+	if(block_size != ifq)
+		return 0;
+	else if()
 	// The below is a necessary, but insufficient condition for validating a
 	// configuration.
 	return isNumDimConfiguration(configuration);
