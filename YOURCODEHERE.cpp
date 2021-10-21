@@ -53,9 +53,9 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
 	int il1size = getil1size(halfBackedConfig);
 	int ul2size = getl2size(halfBackedConfig);
 
-	//int dl1assoc_index = extractConfigPararm(halfBackedConfig, 4);
-	//int il1assoc_index = extractConfigPararm(halfBackedConfig, 6);
-	//int ul2assoc_index = extractConfigPararm(halfBackedConfig, 9);
+	int dl1assoc_index = extractConfigPararm(halfBackedConfig, 4);
+	int il1assoc_index = extractConfigPararm(halfBackedConfig, 6);
+	int ul2assoc_index = extractConfigPararm(halfBackedConfig, 9);
 
 	int dl1_late = log2(dl1size/1024) + dl1assoc_index - 1;
 	int il1_late = log2(il1size/1024) + il1assoc_index - 1;
@@ -77,12 +77,12 @@ int validateConfiguration(std::string configuration) {
 	// FIXME - YOUR CODE HERE
 	// First four points in section 8.3
 	
-	int il1block_size = l1block(extractConfigPararm(configuration, 2));
+	int il1block_size = 8 << extractConfigPararm(configuration, 2);
 	int il1size = getdl1size(configuration);
 	int dl1size = getil1size(configuration);
-	int ul2block_size = extractConfigPararm(configuration, 8);
+	int ul2block_size = 16 << extractConfigPararm(configuration, 8);
 	int ul2size = getl2size(configuration);
-	int ifq = extractConfigPararm(configuration, 0) * 8;
+	int ifq = 1 << extractConfigPararm(configuration, 0) * 8;
 
 	if(il1block_size < ifq)
 		return 0;
