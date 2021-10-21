@@ -70,10 +70,10 @@ int validateConfiguration(std::string configuration) {
 	// FIXME - YOUR CODE HERE
 	// First four points in section 8.3
 	int il1block_size = extractConfigPararm(configuration, 2);
-	int il1size = getdl1size(halfBackedConfig);
-	int dl1size = getil1size(halfBackedConfig);
+	int il1size = getdl1size(configuration);
+	int dl1size = getil1size(configuration);
 	int ul2block_size = extractConfigPararm(configuration, 8);
-	int ul2size = getl2size(halfBackedConfig);
+	int ul2size = getl2size(configuration);
 	int ifq = extractConfigPararm(configuration, 0) * 8;
 
 	if(il1block_size < ifq)
