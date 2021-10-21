@@ -58,7 +58,7 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
 	//
 	//YOUR CODE ENDS HERE
 	//
-
+	cout << latency.str();
 	return latency.str();
 }
 
@@ -69,7 +69,7 @@ int validateConfiguration(std::string configuration) {
 
 	// FIXME - YOUR CODE HERE
 	// First four points in section 8.3
-	/*
+	
 	int il1block_size = extractConfigPararm(configuration, 2);
 	int il1size = getdl1size(configuration);
 	int dl1size = getil1size(configuration);
@@ -87,7 +87,7 @@ int validateConfiguration(std::string configuration) {
 		return 0;
 	else if(ul2size < 32768 || ul2size > 1048576)
 		return 0;
-	*/
+	
 	// The below is a necessary, but insufficient condition for validating a
 	// configuration.
 	return isNumDimConfiguration(configuration);
