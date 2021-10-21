@@ -59,7 +59,7 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
 	//YOUR CODE ENDS HERE
 	//
 
-	return latency;
+	return latency.str();
 }
 
 /*
@@ -142,6 +142,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 
 		// Handling for currently exploring dimension. This is a very dumb
 		// implementation.
+		// Change this block
 		int nextValue = extractConfigPararm(nextconfiguration,
 				currentlyExploringDim) + 1;
 
@@ -153,6 +154,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		ss << nextValue << " ";
 
 		// Fill in remaining independent params with 0.
+		// Change to put best fit
 		for (int dim = (currentlyExploringDim + 1);
 				dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
 			ss << "0 ";
