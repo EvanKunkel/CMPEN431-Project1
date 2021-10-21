@@ -53,9 +53,9 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
 	int il1size = getil1size(halfBackedConfig);
 	int ul2size = getl2size(halfBackedConfig);
 
-	int dl1assoc_index = extractConfigPararm(halfBackedConfig, 4);
-	int il1assoc_index = extractConfigPararm(halfBackedConfig, 6);
-	int ul2assoc_index = extractConfigPararm(halfBackedConfig, 9);
+	//int dl1assoc_index = extractConfigPararm(halfBackedConfig, 4);
+	//int il1assoc_index = extractConfigPararm(halfBackedConfig, 6);
+	//int ul2assoc_index = extractConfigPararm(halfBackedConfig, 9);
 
 	int dl1_late = log2(dl1size/1024) + dl1assoc_index - 1;
 	int il1_late = log2(il1size/1024) + il1assoc_index - 1;
