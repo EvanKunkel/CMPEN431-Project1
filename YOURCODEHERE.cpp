@@ -82,7 +82,7 @@ int validateConfiguration(std::string configuration) {
 	int dl1size = getil1size(configuration);
 	int ul2block_size = 16 << extractConfigPararm(configuration, 8);
 	int ul2size = getl2size(configuration);
-	int ifq = 1 << extractConfigPararm(configuration, 0) * 8;
+	int ifq = (1 << extractConfigPararm(configuration, 0)) * 8;
 
 	if(il1block_size < ifq)
 		return 0;
@@ -166,7 +166,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Change to put best fit
 		for (int dim = (currentlyExploringDim + 1);
 				dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
-			ss << "0 ";
+			ss << extractConfigPararm(bestConfig, dim) << " ";
 		}
 
 		//
