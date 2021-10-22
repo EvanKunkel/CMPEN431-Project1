@@ -187,14 +187,15 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 
 		// Make sure we start exploring next dimension in next iteration.
 		if (currentDimDone) {
-			if(currentlyExploringDim == 14)
+			if(currentlyExploringDim == 14){
 				currentlyExploringDim = 11;
-			else if(currentlyExploringDim == 11)
+			}else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
-			else if(currentlyExploringDim == 1)
+			}else if(currentlyExploringDim == 1){
 				currentlyExploringDim = 2;
-			else
+			}else{
 				currentlyExploringDim++;
+			}
 			currentDimDone = false;
 		}
 
