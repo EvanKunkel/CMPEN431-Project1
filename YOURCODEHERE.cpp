@@ -28,7 +28,7 @@ using namespace std;
  * Feel free to create more global variables to track progress of your
  * heuristic.
  */
-unsigned int currentlyExploringDim = 0;
+unsigned int currentlyExploringDim = 12;
 bool currentDimDone = false;
 bool isDSEComplete = false;
 
@@ -151,7 +151,8 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 
 		// Handling for currently exploring dimension. This is a very dumb
 		// implementation.
-		// Change this block
+
+		// Change these two blocks
 		int nextValue = extractConfigPararm(nextconfiguration,
 				currentlyExploringDim) + 1;
 
@@ -182,14 +183,23 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Configuration is ready now.
 		nextconfiguration = ss.str();
 
+		//Change next two parts for the order #5
+
 		// Make sure we start exploring next dimension in next iteration.
 		if (currentDimDone) {
-			currentlyExploringDim++;
+			if(currentlyExploringDim == 14)
+				currentlyExploringDim = 11;
+			else if(currentlyExploringDim == 11)
+				currentlyExploringDim = 0;
+			else if(currentlyExploringDim == 1)
+				currentlyExploringDim = 2;
+			else
+				currentlyExploringDim++;
 			currentDimDone = false;
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (currentlyExploringDim == (NUM_DIMS - NUM_DIMS_DEPENDENT))
+		if (currentlyExploringDim == 10)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
