@@ -32,9 +32,9 @@ unsigned int currentlyExploringDim = 12;
 bool currentDimDone = false;
 bool isDSEComplete = false;
 
-int iterations;
+int iterations = 0;
 bool firstConfig = true;
-bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+bool dimsComplete[NUM_DIMS-NUM_DIMS_DEPENDENT] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
 /*
  * Given a half-baked configuration containing cache properties, generate
@@ -216,7 +216,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (iterations == 15)
+		if (iterations == 4)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
