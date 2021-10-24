@@ -200,11 +200,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// ---------BUILDS THE SS------------
 		
 		for (int dim = 0; dim < NUM_DIMS - NUM_DIMS_DEPENDENT; ++dim) {
-			if (dimsComplete[dim] == 1) {
-				// Fill in the dimensions already-scanned with the already-selected best value.
-				ss << extractConfigPararm(bestConfig, dim) << " ";
-			}
-			else if (dim == currentlyExploringDim) {
+			if (dim == currentlyExploringDim) {
 				// Fill in the nextValue to be explored
 				ss << nextValue << " ";
 			}
