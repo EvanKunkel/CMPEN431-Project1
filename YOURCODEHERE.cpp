@@ -221,6 +221,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 			}else if(allExplored){
 				for(int i = 0; i < 15; i++)
 					dimsComplete[i] = false;
+				currentlyExploringDim = 12;
 			}else{
 				currentlyExploringDim++;
 			}
