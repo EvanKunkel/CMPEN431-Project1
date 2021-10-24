@@ -161,6 +161,11 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Change these two blocks
 		int nextValue = extractConfigPararm(nextconfiguration,
 				currentlyExploringDim) + 1;
+		
+		if(firstConfig){
+			nextValue = 0;
+			firstConfig = false;
+		}
 
 		if (nextValue >= GLOB_dimensioncardinality[currentlyExploringDim]) {
 			nextValue = GLOB_dimensioncardinality[currentlyExploringDim] - 1;
