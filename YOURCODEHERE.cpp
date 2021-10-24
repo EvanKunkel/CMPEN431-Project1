@@ -32,8 +32,9 @@ unsigned int currentlyExploringDim = 12;
 bool currentDimDone = false;
 bool isDSEComplete = false;
 
+bool allExplored;
 bool firstConfig = true;
-bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
 /*
  * Given a half-baked configuration containing cache properties, generate
@@ -209,10 +210,17 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// 5. BP -> FPU -> CORE -> CACHE
 		// 12 -> 13 -> 14 -> 11 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 		if (currentDimDone) {
+			allExplored = true;
+			for(int i = 0; i < 15; i++)
+				if(dimsComplete[i] == false)
+					allExplored = false;
 			if(currentlyExploringDim == 14){
 				currentlyExploringDim = 11;
 			}else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
+			}else if(allExplored){
+				for(int i = 0; i < 15; i++)
+					dimsComplete[i] = false;
 			}else{
 				currentlyExploringDim++;
 			}
