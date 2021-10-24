@@ -148,14 +148,14 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 
 		// Fill in the dimensions already-scanned with the already-selected best
 		// value.
-		/*
+		
 		for (int dim = 0; dim < currentlyExploringDim; ++dim) {
-			if(dimsComplete[dim])
+			if(dimsComplete[dim]){
 				ss << extractConfigPararm(bestConfig, dim) << " ";
-			else
+			}else{
 				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
+			}
 		}
-		*/
 
 		// Handling for currently exploring dimension. This is a very dumb
 		// implementation.
@@ -175,17 +175,17 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 			dimsComplete[currentlyExploringDim] = true;
 		}
 
-		//ss << nextValue << " ";
+		ss << nextValue << " ";
 
 		// Fill in remaining independent params with 0.
 		// Change to put best fit
-		for (int dim = 0; dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
-			if(dimsComplete[dim])
+		for (int dim = (currentlyExploringDim + 1);
+					dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
+			if(dimsComplete[dim]){
 				ss << extractConfigPararm(bestConfig, dim) << " ";
-			else if(dim == currentlyExploringDim)
-				ss << nextValue << " ";
-			else
+			}else{
 				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
+			}
 		}
 
 		//
