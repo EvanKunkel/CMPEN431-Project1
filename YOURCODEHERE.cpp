@@ -14,18 +14,13 @@
 #include <iterator>
 
 #include "431project.h"
-#include "math.h"
-
-#include <iostream>
 
 using namespace std;
 
 /*
  * Enter your PSU IDs here to select the appropriate scanning order.
- * Tamara's ID: 954153742 PSU E-mail: TFQ5018
- * James's ID: 941006691 PSU E-mail: JFL5677
  */
-#define PSU_ID_SUM (954153742+941006691)
+#define PSU_ID_SUM (908591357+000000000)
 
 /*
  * Some global variables to track heuristic progress.
@@ -37,9 +32,8 @@ unsigned int currentlyExploringDim = 12;
 bool currentDimDone = false;
 bool isDSEComplete = false;
 
+int iterations = 0;
 bool firstConfig = true;
-bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, 
-								false, false, false, false, false, false, false ,false, false};
 
 /*
  * Given a half-baked configuration containing cache properties, generate
@@ -50,44 +44,32 @@ bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, 
  */
 std::string generateCacheLatencyParams(string halfBackedConfig) {
 
-	std::stringstream ssLatency;
-	string defaultLatency = "1 1 1";
-	int dl1lat, il1lat, ul2lat = 0;
-	
-	// Gets the sizes of cache values
-	int il1Size = getil1size(halfBackedConfig + defaultLatency);
-	int dl1Size = getdl1size(halfBackedConfig + defaultLatency);
-	int l2Size = getl2size(halfBackedConfig + defaultLatency);
+	string latencySettings;
 
-	// Assignes cordinated values for sizes to latency settins
-	// ** THIS IS FOR DIRECTED MAPPED CACHES
-	for (int x = 1; x < 11; x++) {
-		if ((1024 * pow(2.0, (double)x)) == il1Size) {
-			il1lat = x-1;
-		}
-		if ((1024 * pow(2.0, (double)x)) == dl1Size) {
-			dl1lat = x-1;
-		}
-		if ((1024 * pow(2.0, (double)x)) == l2Size) {
-			ul2lat = x-5;
-		}
-	}
+	//
+	//YOUR CODE BEGINS HERE
+	//
+	//8.3.5 & 8.3.6
+	std::stringstream latency;
 
-	// Adjusts latencies for multiple-way associative
-	int il1Assoc = extractConfigPararm(halfBackedConfig + defaultLatency, 6);
-	int dl1Assoc = extractConfigPararm(halfBackedConfig + defaultLatency, 4);
-	int ul2Assoc = extractConfigPararm(halfBackedConfig + defaultLatency, 9);
+	int dl1size = getdl1size(halfBackedConfig);
+	int il1size = getil1size(halfBackedConfig);
+	int ul2size = getl2size(halfBackedConfig);
 
-	// Adds the additional cycles to the latencies
-	// Values match up with index value parameters, no need to calculate
-	il1lat += il1Assoc;
-	dl1lat += dl1Assoc;
-	ul2lat += ul2Assoc;
+	int dl1assoc_index = extractConfigPararm(halfBackedConfig, 4);
+	int il1assoc_index = extractConfigPararm(halfBackedConfig, 6);
+	int ul2assoc_index = extractConfigPararm(halfBackedConfig, 9);
 
-	// Adds the latency to the ss
-	ssLatency << dl1lat << " " << il1lat << " " << ul2lat;
+	int dl1_late = log2(dl1size/1024) + dl1assoc_index - 1;
+	int il1_late = log2(il1size/1024) + il1assoc_index - 1;
+	int ul2_late = log2(ul2size/1024) + ul2assoc_index - 5;
 
-	return ssLatency.str();
+	latency << dl1_late << " " << il1_late << " " << ul2_late;
+
+	//
+	//YOUR CODE ENDS HERE
+	//
+	return latency.str();
 }
 
 /*
@@ -95,34 +77,29 @@ std::string generateCacheLatencyParams(string halfBackedConfig) {
  */
 int validateConfiguration(std::string configuration) {
 
-	int il1 = extractConfigPararm(configuration, 2);
-	int ifq = extractConfigPararm(configuration, 0);
-	int ul2 = extractConfigPararm(configuration, 8);
-
-	// Checks if il1 less than ifq (il1 in B, ifq * 8 = B)
-	if (il1 < ifq) {
-		return 0;
-	}
-
-	// Checks if ul2 less than twice il1
-	if (ul2 < il1) {
-		return 0;
-	}
+	// FIXME - YOUR CODE HERE
+	// First four points in section 8.3
 	
-	// Checks il1 and dl1 size Min: 2 KB, Max: 64 KB
-	if (getil1size(configuration) < 2048 || getil1size(configuration) > 65536) {
-		return 0;
-	}
-	if (getdl1size(configuration) < 2048 || getdl1size(configuration) > 65536) {
-		return 0;
-	}
+	int il1block_size = 8 << extractConfigPararm(configuration, 2);
+	int il1size = getdl1size(configuration);
+	int dl1size = getil1size(configuration);
+	int ul2block_size = 16 << extractConfigPararm(configuration, 8);
+	int ul2size = getl2size(configuration);
+	int ifq = (1 << extractConfigPararm(configuration, 0)) * 8;
 
-	// Checks ul2 size Min: 32 KB, Max: 1 MB
-	if (getl2size(configuration) < 32768 || getl2size(configuration) > 1048576) {
+	if(il1block_size < ifq)
 		return 0;
-	}
-
-
+	if(ul2block_size < 2 * il1block_size)
+		return 0;
+	if(ul2size < 2 * (il1size + dl1size))
+		return 0;
+	if(il1size < 2048 || il1size > 65536)
+		return 0;
+	if(dl1size < 2048 || dl1size > 65536)
+		return 0;
+	if(ul2size < 32768 || ul2size > 1048576)
+		return 0;
+	
 	// The below is a necessary, but insufficient condition for validating a
 	// configuration.
 	return isNumDimConfiguration(configuration);
@@ -153,10 +130,6 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 
 	std::string nextconfiguration = currentconfiguration;
 	// Continue if proposed configuration is invalid or has been seen/checked before.
-
-	// Variable to store paramter of dimension from baseline and if its the first time 
-	// searching through this dimension
-
 	while (!validateConfiguration(nextconfiguration) ||
 		GLOB_seen_configurations[nextconfiguration]) {
 
@@ -175,45 +148,39 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		if (optimizeforEDP == 1)
 			bestConfig = bestEDPconfiguration;
 
+		// Fill in the dimensions already-scanned with the already-selected best
+		// value.
+		
+		for (int dim = 0; dim < currentlyExploringDim; ++dim) {
+			ss << extractConfigPararm(bestConfig, dim) << " ";
+		}
 
 		// Handling for currently exploring dimension. This is a very dumb
 		// implementation.
-		int nextValue = extractConfigPararm(nextconfiguration, currentlyExploringDim) + 1;
 
-		// Checks if this is first time searching in current dimension
-		if (firstConfig) {
-			// Sets start value as 0 and marks no longer first param at current dimen
+		// Change these two blocks
+		int nextValue = extractConfigPararm(nextconfiguration,
+				currentlyExploringDim) + 1;
+		
+		if(firstConfig){
 			nextValue = 0;
 			firstConfig = false;
 		}
 
-		// Checks if nextValue is larger than the cardinality
 		if (nextValue >= GLOB_dimensioncardinality[currentlyExploringDim]) {
-			// Decrements if it is
 			nextValue = GLOB_dimensioncardinality[currentlyExploringDim] - 1;
-
-			// Marks current dimension as done
 			currentDimDone = true;
-			dimsComplete[currentlyExploringDim] = true;
 		}
 
-		// ---------BUILDS THE SS------------
-		
-		for (int dim = 0; dim < NUM_DIMS - NUM_DIMS_DEPENDENT; ++dim) {
-			if (dimsComplete[dim] == 1) {
-				// Fill in the dimensions already-scanned with the already-selected best value.
-				ss << extractConfigPararm(bestConfig, dim) << " ";
-			}
-			else if (dim == currentlyExploringDim) {
-				// Fill in the nextValue to be explored
-				ss << nextValue << " ";
-			}
-			else {
-				// Fill in the value for baseline
-				ss << extractConfigPararm(bestConfig, dim) << " ";
-			}
-			
+		ss << nextValue << " ";
+
+		// Fill in remaining independent params with 0.
+		// Change to put best fit
+		for (int dim = (currentlyExploringDim + 1);
+					dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
+			ss << extractConfigPararm(bestConfig, dim) << " ";
 		}
+
 		//
 		// Last NUM_DIMS_DEPENDENT3 configuration parameters are not independent.
 		// They depend on one or more parameters already set. Determine the
@@ -227,31 +194,34 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Configuration is ready now.
 		nextconfiguration = ss.str();
 
+		//Change next two parts for the order #5
 
-		// Handles the order of dimensions 
-		// Mod 1: BP -> Cache -> FPU -> Core
-		// 12->13->14->2->3->4->5->6->7->8->9->10->11->0->1
-
+		// Make sure we start exploring next dimension in next iteration.
+		// BP -> FPU -> CORE -> CACHE
+		// 12 -> 13 -> 14 -> 11 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
+		// Loop through max 15 times
 		if (currentDimDone) {
-			
-			// Signal that DSE is complete after this configuration.
-			if (currentlyExploringDim == 1){
-				currentlyExploringDim = 12;
+			if(currentlyExploringDim == 14){
+				currentlyExploringDim = 11;
 			}
-			else if (currentlyExploringDim == 14) {
-				currentlyExploringDim = 2;
-			}
-			else if (currentlyExploringDim == 11) {
+			else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
 			}
-			else {
+			else if(currentlyExploringDim == 10){
+				currentlyExploringDim = 12;
+				++iterations;
+			}
+			else{
 				currentlyExploringDim++;
 			}
 			currentDimDone = false;
-
-			//Resets bool to store the inital parameter of the next dimension
-			firstConfig = true;	
+			firstConfig = true;
 		}
+
+		// Signal that DSE is complete after this configuration.
+		if (iterations == NUM_DIMS-NUM_DIMS_DEPENDENT)
+			isDSEComplete = true;
 	}
 	return nextconfiguration;
 }
+
