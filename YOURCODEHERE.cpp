@@ -32,7 +32,7 @@ unsigned int currentlyExploringDim = 12;
 bool currentDimDone = false;
 bool isDSEComplete = false;
 
-bool allExplored;
+int iterations;
 bool firstConfig = true;
 bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
@@ -205,8 +205,9 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 				currentlyExploringDim = 11;
 			}else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
-			}else if(currentlyExploringDim == 101){
-				currentlyExploringDim = 12;//12
+			}else if(currentlyExploringDim == 10){
+				currentlyExploringDim = 12;
+				++iterations;
 			}else{
 				currentlyExploringDim++;
 			}
@@ -215,7 +216,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (currentDimDone && currentlyExploringDim == 10)
+		if (iterations == 15)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
