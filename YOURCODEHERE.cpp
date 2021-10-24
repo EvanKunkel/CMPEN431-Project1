@@ -32,6 +32,9 @@ unsigned int currentlyExploringDim = 12;
 bool currentDimDone = false;
 bool isDSEComplete = false;
 
+bool firstConfig = true;
+bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+
 /*
  * Given a half-baked configuration containing cache properties, generate
  * latency parameters in configuration string. You will need information about
@@ -146,7 +149,10 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Fill in the dimensions already-scanned with the already-selected best
 		// value.
 		for (int dim = 0; dim < currentlyExploringDim; ++dim) {
-			ss << extractConfigPararm(bestConfig, dim) << " ";
+			if(dimsComplete[dim])
+				ss << extractConfigPararm(bestConfig, dim) << " ";
+			else
+				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
 		}
 
 		// Handling for currently exploring dimension. This is a very dumb
@@ -159,6 +165,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		if (nextValue >= GLOB_dimensioncardinality[currentlyExploringDim]) {
 			nextValue = GLOB_dimensioncardinality[currentlyExploringDim] - 1;
 			currentDimDone = true;
+			dimsComplete[currentlyExploringDim] = true;
 		}
 
 		ss << nextValue << " ";
@@ -167,7 +174,10 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Change to put best fit
 		for (int dim = (currentlyExploringDim + 1);
 				dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
-			ss << extractConfigPararm(bestConfig, dim) << " ";
+			if(dimsComplete[dim])
+				ss << extractConfigPararm(bestConfig, dim) << " ";
+			else
+				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
 		}
 
 		//
@@ -186,6 +196,8 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		//Change next two parts for the order #5
 
 		// Make sure we start exploring next dimension in next iteration.
+		// 5. BP -> FPU -> CORE -> CACHE
+		// 12 -> 13 -> 14 -> 11 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 		if (currentDimDone) {
 			if(currentlyExploringDim == 14){
 				currentlyExploringDim = 11;
@@ -197,6 +209,8 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 				currentlyExploringDim++;
 			}
 			currentDimDone = false;
+
+			firstConfig = false;
 		}
 
 		// Signal that DSE is complete after this configuration.
