@@ -206,7 +206,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 			}else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
 			}else if(currentlyExploringDim == 10){
-				currentlyExploringDim = 12;
+				currentlyExploringDim = 10;//12
 			}else{
 				currentlyExploringDim++;
 			}
@@ -215,7 +215,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (GLOB_seen_configurations[nextconfiguration])
+		if (currentDimDone && currentlyExploringDim == 10)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
