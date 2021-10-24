@@ -89,15 +89,15 @@ int validateConfiguration(std::string configuration) {
 
 	if(il1block_size < ifq)
 		return 0;
-	else if(ul2block_size < 2 * il1block_size)
+	if(ul2block_size < 2 * il1block_size)
 		return 0;
-	else if(ul2size < il1size + dl1size)
+	if(ul2size < il1size + dl1size)
 		return 0;
-	else if(il1size < 2048 || il1size > 65536)
+	if(il1size < 2048 || il1size > 65536)
 		return 0;
-	else if(dl1size < 2048 || dl1size > 65536)
+	if(dl1size < 2048 || dl1size > 65536)
 		return 0;
-	else if(ul2size < 32768 || ul2size > 1048576)
+	if(ul2size < 32768 || ul2size > 1048576)
 		return 0;
 	
 	// The below is a necessary, but insufficient condition for validating a
@@ -209,9 +209,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// 5. BP -> FPU -> CORE -> CACHE
 		// 12 -> 13 -> 14 -> 11 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 		if (currentDimDone) {
-			if(currentlyExploringDim == 10){
-				isDSEComplete = true;
-			}else if(currentlyExploringDim == 14){
+			if(currentlyExploringDim == 14){
 				currentlyExploringDim = 11;
 			}else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
@@ -224,8 +222,8 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		//if (currentlyExploringDim == 10)
-		//	isDSEComplete = true;
+		if (currentlyExploringDim == 10)
+			isDSEComplete = true;
 	}
 	return nextconfiguration;
 }
