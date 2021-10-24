@@ -238,7 +238,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 			
 			// Signal that DSE is complete after this configuration.
 			if (currentlyExploringDim == 1){
-				isDSEComplete = true;
+				currentlyExploringDim = 12;
 			}
 			else if (currentlyExploringDim == 14) {
 				currentlyExploringDim = 2;
