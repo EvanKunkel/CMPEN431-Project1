@@ -91,6 +91,8 @@ int validateConfiguration(std::string configuration) {
 		return 0;
 	else if(ul2block_size < 2 * il1block_size)
 		return 0;
+	else if(ul2size < il1size + dl1size)
+		return 0;
 	else if(il1size < 2048 || il1size > 65536)
 		return 0;
 	else if(dl1size < 2048 || dl1size > 65536)
