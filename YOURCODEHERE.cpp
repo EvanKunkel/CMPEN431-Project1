@@ -153,11 +153,14 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// value.
 		
 		for (int dim = 0; dim < currentlyExploringDim; ++dim) {
+			/*
 			if(dimsComplete[dim]){
 				ss << extractConfigPararm(bestConfig, dim) << " ";
 			}else{
 				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
 			}
+			*/
+			ss << extractConfigPararm(bestConfig, dim) << " ";
 		}
 
 		// Handling for currently exploring dimension. This is a very dumb
@@ -184,11 +187,14 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Change to put best fit
 		for (int dim = (currentlyExploringDim + 1);
 					dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
+			/*
 			if(dimsComplete[dim]){
 				ss << extractConfigPararm(bestConfig, dim) << " ";
 			}else{
 				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
 			}
+			*/
+			ss << extractConfigPararm(bestConfig, dim) << " ";
 		}
 
 		//
@@ -224,8 +230,8 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (nextconfiguration == bestConfig)//currentlyExploringDim == 10
-			isDSEComplete = true;
+		//if (nextconfiguration == bestConfig)//currentlyExploringDim == 10
+		//	isDSEComplete = true;
 	}
 	return nextconfiguration;
 }
