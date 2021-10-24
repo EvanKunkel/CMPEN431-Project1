@@ -199,23 +199,23 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// 5. BP -> FPU -> CORE -> CACHE
 		// 12 -> 13 -> 14 -> 11 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
 		if (currentDimDone) {
-			if(currentlyExploringDim == 14){
+			if(currentlyExploringDim == 10){
+				isDSEComplete = true;
+			}else if(currentlyExploringDim == 14){
 				currentlyExploringDim = 11;
 			}else if(currentlyExploringDim == 11){
 				currentlyExploringDim = 0;
-			}else if(currentlyExploringDim == 1){
-				currentlyExploringDim = 2;
 			}else{
 				currentlyExploringDim++;
 			}
 			currentDimDone = false;
 
-			firstConfig = false;
+			firstConfig = true;
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (currentlyExploringDim == 10)
-			isDSEComplete = true;
+		//if (currentlyExploringDim == 10)
+		//	isDSEComplete = true;
 	}
 	return nextconfiguration;
 }
