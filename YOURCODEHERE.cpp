@@ -34,7 +34,7 @@ bool isDSEComplete = false;
 
 bool allExplored;
 bool firstConfig = true;
-bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+//bool dimsComplete[NUM_DIMS] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
 /*
  * Given a half-baked configuration containing cache properties, generate
@@ -153,13 +153,6 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// value.
 		
 		for (int dim = 0; dim < currentlyExploringDim; ++dim) {
-			/*
-			if(dimsComplete[dim]){
-				ss << extractConfigPararm(bestConfig, dim) << " ";
-			}else{
-				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
-			}
-			*/
 			ss << extractConfigPararm(bestConfig, dim) << " ";
 		}
 
@@ -178,7 +171,6 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		if (nextValue >= GLOB_dimensioncardinality[currentlyExploringDim]) {
 			nextValue = GLOB_dimensioncardinality[currentlyExploringDim] - 1;
 			currentDimDone = true;
-			dimsComplete[currentlyExploringDim] = true;
 		}
 
 		ss << nextValue << " ";
@@ -187,13 +179,6 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		// Change to put best fit
 		for (int dim = (currentlyExploringDim + 1);
 					dim < (NUM_DIMS - NUM_DIMS_DEPENDENT); ++dim) {
-			/*
-			if(dimsComplete[dim]){
-				ss << extractConfigPararm(bestConfig, dim) << " ";
-			}else{
-				ss << extractConfigPararm(GLOB_baseline, dim) << " ";
-			}
-			*/
 			ss << extractConfigPararm(bestConfig, dim) << " ";
 		}
 
@@ -230,8 +215,8 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		//if (nextconfiguration == bestConfig)//currentlyExploringDim == 10
-		//	isDSEComplete = true;
+		if (currentlyExploringDim == 10 && currentDimDone)
+			isDSEComplete = true;
 	}
 	return nextconfiguration;
 }
