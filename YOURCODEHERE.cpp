@@ -214,25 +214,24 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 			for(int i = 0; i < 15; i++)
 				if(dimsComplete[i] == false)
 					allExplored = false;
-			if(currentlyExploringDim == 14){
-				currentlyExploringDim = 11;
-			}else if(currentlyExploringDim == 11){
-				currentlyExploringDim = 0;
-			}else if(allExplored){
+			if(allExplored){
 				for(int i = 0; i < 15; i++)
 					dimsComplete[i] = false;
 				currentlyExploringDim = 12;
+			}if(currentlyExploringDim == 14){
+				currentlyExploringDim = 11;
+			}else if(currentlyExploringDim == 11){
+				currentlyExploringDim = 0;
 			}else{
 				currentlyExploringDim++;
 			}
 			currentDimDone = false;
-
 			firstConfig = true;
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (currentlyExploringDim == 10)
-			isDSEComplete = true;
+		//if (currentlyExploringDim == 10)
+		//	isDSEComplete = true;
 	}
 	return nextconfiguration;
 }
