@@ -175,7 +175,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 			dimsComplete[currentlyExploringDim] = true;
 		}
 
-		ss << nextValue << " ";
+		//ss << nextValue << " ";
 
 		// Fill in remaining independent params with 0.
 		// Change to put best fit
