@@ -34,7 +34,6 @@ bool isDSEComplete = false;
 
 int iterations = 0;
 bool firstConfig = true;
-bool dimsComplete[NUM_DIMS-NUM_DIMS_DEPENDENT] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 
 /*
  * Given a half-baked configuration containing cache properties, generate
@@ -198,8 +197,9 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		//Change next two parts for the order #5
 
 		// Make sure we start exploring next dimension in next iteration.
-		// 5. BP -> FPU -> CORE -> CACHE
+		// BP -> FPU -> CORE -> CACHE
 		// 12 -> 13 -> 14 -> 11 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10
+		// Loop through max 15 times
 		if (currentDimDone) {
 			if(currentlyExploringDim == 14){
 				currentlyExploringDim = 11;
@@ -216,7 +216,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (iterations == 4)
+		if (iterations == NUM_DIMS-NUM_DIMS_DEPENDENT)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
