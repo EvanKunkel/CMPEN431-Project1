@@ -19,6 +19,7 @@ using namespace std;
 
 /*
  * Enter your PSU IDs here to select the appropriate scanning order.
+ * Evan Kunkel	ID: 908591357	Email: edk5136@psu.edu
  */
 #define PSU_ID_SUM (908591357+000000000)
 
@@ -43,8 +44,6 @@ bool firstConfig = true;
  * Returns a string similar to "1 1 1"
  */
 std::string generateCacheLatencyParams(string halfBackedConfig) {
-
-	string latencySettings;
 
 	//
 	//YOUR CODE BEGINS HERE
@@ -219,7 +218,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (iterations == NUM_DIMS-NUM_DIMS_DEPENDENT)
+		if (iterations == 2)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
