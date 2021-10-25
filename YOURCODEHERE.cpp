@@ -218,7 +218,7 @@ std::string generateNextConfigurationProposal(std::string currentconfiguration,
 		}
 
 		// Signal that DSE is complete after this configuration.
-		if (iterations == 2)
+		if (iterations == NUM_DIMS-NUM_DIMS_DEPENDENT)
 			isDSEComplete = true;
 	}
 	return nextconfiguration;
